@@ -1,0 +1,239 @@
+-- MySQL dump 10.16  Distrib 10.1.34-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: studyproject
+-- ------------------------------------------------------
+-- Server version	10.1.34-MariaDB-0ubuntu0.18.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `menu_admin`
+--
+
+DROP TABLE IF EXISTS `menu_admin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `menu_admin` (
+  `id` int(255) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'заголовок',
+  `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'ссылка',
+  `sort` int(255) unsigned NOT NULL COMMENT 'порядок',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menu_admin`
+--
+
+LOCK TABLES `menu_admin` WRITE;
+/*!40000 ALTER TABLE `menu_admin` DISABLE KEYS */;
+INSERT INTO `menu_admin` VALUES (1,'Редактирование ссылок','/admin/link/edit-links.php',0),(2,'Редактирование текста','/admin/text/edit-texts.php?page=1',0),(3,'Админка','/admin/',10),(4,'Редактирование пользователей','/admin/user/edit-users.php',0),(5,'Заказы','/admin/order/orders.php',0);
+/*!40000 ALTER TABLE `menu_admin` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `menu_item`
+--
+
+DROP TABLE IF EXISTS `menu_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `menu_item` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'заголовок',
+  `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'ссылка',
+  `sort` int(11) unsigned DEFAULT NULL COMMENT 'Порядок',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menu_item`
+--
+
+LOCK TABLES `menu_item` WRITE;
+/*!40000 ALTER TABLE `menu_item` DISABLE KEYS */;
+INSERT INTO `menu_item` VALUES (1,'Главная страница','/',30),(2,'О проекте','/about.php',20),(3,'Полезные ссылки','/usefulLinks.php',10),(4,'Обратная связь','/feedback.php',5),(5,'Lorem ipsum','/text.php?id=1',0),(6,'Текстик','/text.php?id=2',0),(8,'Корзина','/basket/basket-form.php',NULL),(9,'Каталог','/catalog/product.php',NULL);
+/*!40000 ALTER TABLE `menu_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `order_item`
+--
+
+DROP TABLE IF EXISTS `order_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `order_item` (
+  `order_item_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_item_amount` int(11) DEFAULT NULL,
+  `order_item_price` float NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  PRIMARY KEY (`order_item_id`),
+  KEY `product_id` (`product_id`) USING BTREE,
+  KEY `order_id` (`order_id`) USING BTREE,
+  CONSTRAINT `order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_item`
+--
+
+LOCK TABLES `order_item` WRITE;
+/*!40000 ALTER TABLE `order_item` DISABLE KEYS */;
+INSERT INTO `order_item` VALUES (1,NULL,8,1,1),(2,NULL,14,2,1),(3,NULL,10,3,1);
+/*!40000 ALTER TABLE `order_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `order_status` enum('новый','в обработке','закрыт','') NOT NULL DEFAULT 'новый',
+  `order_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`order_id`),
+  KEY `user_id` (`user_id`) USING BTREE,
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders`
+--
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (1,1,'новый','2018-07-17 14:09:01'),(2,1,'новый','2018-07-18 14:09:01'),(3,2,'новый','2018-07-19 14:09:01'),(4,3,'новый','2018-07-20 14:09:01');
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `product` (
+  `product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_name` varchar(255) NOT NULL,
+  `product_price` float NOT NULL,
+  PRIMARY KEY (`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product`
+--
+
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES (1,'tank',10),(2,'car',21),(3,'dog',16);
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `short_links`
+--
+
+DROP TABLE IF EXISTS `short_links`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `short_links` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `link` text NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `short_links`
+--
+
+LOCK TABLES `short_links` WRITE;
+/*!40000 ALTER TABLE `short_links` DISABLE KEYS */;
+INSERT INTO `short_links` VALUES (5,'http://allpositions.ru','2018-10-15 16:18:29'),(6,'https://keep.google.com/','2018-10-17 11:18:09');
+/*!40000 ALTER TABLE `short_links` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `text`
+--
+
+DROP TABLE IF EXISTS `text`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `text` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `text` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `text`
+--
+
+LOCK TABLES `text` WRITE;
+/*!40000 ALTER TABLE `text` DISABLE KEYS */;
+INSERT INTO `text` VALUES (1,'Lorem ipsum','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin dui neque, tincidunt tristique turpis in, sagittis ultrices nisi. Sed commodo turpis lacus, a eleifend metus scelerisque consectetur. Aliquam bibendum purus justo, et lobortis ante luctus sed. Pellentesque sit amet tellus sed massa vehicula tincidunt. Nam porta diam id imperdiet congue. Integer mauris odio, scelerisque ut dignissim ac, ornare in metus. Mauris lobortis ultricies venenatis. Morbi euismod felis sem, ac vulputate dui iaculis nec. Praesent in auctor eros. Suspendisse sapien arcu, viverra in ligula vitae, hendrerit auctor eros. Aenean pharetra, lorem vitae hendrerit sagittis, tortor nisl interdum diam, a dictum leo velit vel lacus. Phasellus egestas vel turpis et lobortis.\r\n\r\nSed finibus gravida dui. Integer rutrum lobortis erat, ut elementum nibh sollicitudin mollis. Donec semper sem eget porttitor vestibulum. Integer ipsum est, ultricies in sagittis viverra, porttitor gravida arcu. Suspendisse porta felis nec feugiat ornare. Pellentesque ut sem consequat, suscipit mauris et, cursus nulla. Praesent feugiat et ipsum eget viverra. Nulla ut massa nisl. Ut laoreet pellentesque urna. Phasellus ac purus metus.\r\n\r\nSed a molestie augue. Nam venenatis, odio eget blandit consectetur, nisl leo porta neque, nec dictum nunc odio non lacus. Maecenas quis enim nulla. Pellentesque placerat facilisis laoreet. In finibus laoreet ullamcorper. Praesent auctor finibus tristique. Nullam id nulla in purus dictum elementum. Sed molestie eros in lacus cursus, non accumsan enim mattis. Suspendisse tempor pharetra mi ut posuere.\r\n\r\nMauris gravida pellentesque lorem. Duis accumsan et sem quis sodales. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus sit amet ultrices ipsum. Donec ac tincidunt tellus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus aliquet orci vel consequat elementum. Curabitur vulputate lacinia pellentesque. Phasellus vel dolor dui. Nam vitae dui molestie, fermentum augue sit amet, pulvinar erat. Fusce nulla diam, mattis vitae viverra ac, aliquam a eros. Proin sollicitudin ut arcu at faucibus. Proin arcu libero, malesuada vitae rhoncus id, dictum vitae est. Ut ac risus tincidunt, placerat diam id, porttitor diam. Sed scelerisque tincidunt venenatis.\r\n\r\nNullam consequat imperdiet sem, ac accumsan orci varius et. Sed non eleifend elit. Suspendisse tristique diam non leo ornare egestas egestas et magna. In suscipit sapien ut neque auctor, id lobortis massa ullamcorper. Curabitur est lorem, hendrerit a ex eu, mollis consequat justo. Nunc in quam velit. Aliquam eget diam ut sem lobortis faucibus. Suspendisse potenti. Morbi tincidunt molestie elit, mattis lacinia urna tempus a. Integer varius mollis laoreet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris auctor euismod tellus, nec faucibus ex fringilla non. Duis dignissim quis arcu et vulputate. Duis nulla augue, commodo nec enim bibendum, ornare volutpat ex. Cras sit amet ligula nec nisi pharetra mollis.'),(2,'Текстик, текстище.','В последние дни я встречал множество недовольных отзывов о тексте Черданцева про Аршавина, наткнулся даже на целый блогоматериал с глубоким анализом и разбором черданцевской письменности, и со всеми доводами критиков абсолютно согласен: Жору страшно разнесло по бумаге, а логика осталась где-то за границами исписанных листов. Но ополоумевшему комментатору простительно фэйлить в текстовых пробах, ведь занятие для него непрофильное. И Георгий явно не старается. Никогда не умел.');
+/*!40000 ALTER TABLE `text` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'Алексей','$2y$10$RLfWRVrMANruFG2mfhni1ey5uRp8Yx2ZFI1Jalnl06RyDGn8/9Phm','al@'),(2,'Иван','$2y$10$OmFptfauclOytZ0rgzoIqe1kSk3XVLEnG8ViUgthfvD0FbrxEe/kO','iv@'),(3,'Ульрих','$2y$10$5ih9dfj9ewneFBxnInw.huJtPB3IuT8sgnR902CX9uyw6MQsTwIfO','');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2018-10-25  8:39:28

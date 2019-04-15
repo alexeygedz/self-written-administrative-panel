@@ -1,0 +1,43 @@
+h1 {
+  color: #000080;
+  font-size: 200%;
+  font-family: Arial, Verdana, sans-serif;
+  text-align: center;
+}
+
+h2 {
+  color: #000080;
+  font-size: 150%;
+  font-family: Arial, Verdana, sans-serif;
+  text-align: center;
+}
+
+p {
+  padding-left: 20px;
+
+}
+
+em {
+	padding-left: 40px;
+}
+
+input {
+  margin-bottom: 10px;
+}
+
+textarea {
+  box-sizing: border-box;
+}
+
+input, textarea {
+  font-family: Arial, sans-serif;
+  font-size: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
